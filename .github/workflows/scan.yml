@@ -1,0 +1,55 @@
+name: FX Signal Scan
+
+on:
+  schedule:
+    # 5分ごとにシグナルスキャン
+    # 注: GitHub Actions の cron は遅延あり（数分）ため、厳密な時刻は保証されない
+    - cron: '*/5 * * * *'
+  workflow_dispatch:  # 手動実行可
+
+# 同時実行を防ぐ（前回が終わってない場合は待つ）
+concurrency:
+  group: fx-signals-scan
+  cancel-in-progress: false
+
+permissions:
+  contents: write  # signals.csv を commit/push するため
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: pip install -r requirements-runtime.txt
+
+      - name: Run signal scan
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+        run: python run.py --once
+
+      - name: Commit signal logs
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          # 並行実行による競合を回避
+          git pull --rebase --autostash || true
+
+          # シグナルが出た場合のみコミット
+          git add logs/signals.csv 2>/dev/null || true
+          if git diff --staged --quiet; then
+            echo "No new signals to commit"
+          else
+            git commit -m "chore: update signals.csv [skip ci]"
+            git push
+          fi

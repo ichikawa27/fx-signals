@@ -1,0 +1,61 @@
+﻿通貨ペア,戦略,条件,勝率(%),リターン(%),最大DD(%),トレード数,PF,シャープ比,最適パラメータ
+USDJPY,RSI逆張り,全データ,70.0,11.68,-12.24,10,2.32,0.6,"{'rsi_period': np.int64(18), 'rsi_lower': np.int64(25), 'rsi_upper': np.int64(80)}"
+USDJPY,RSI逆張り,イベント除外,77.8,13.81,-12.51,27,1.81,0.78,"{'rsi_period': np.int64(16), 'rsi_lower': np.int64(30), 'rsi_upper': np.int64(75)}"
+USDJPY,RSI逆張り,全データ [WF検証],55.6,1.76,-5.18,9,5.17,0.0,WF 4分割平均
+USDJPY,RSI逆張り,イベント除外 [WF検証],69.4,1.23,-8.73,40,6.97,0.0,WF 4分割平均
+USDJPY,ストキャスティクス,全データ,68.0,11.43,-10.18,97,1.42,0.71,"{'k_period': np.int64(14), 'd_period': np.int64(4), 'lower': np.int64(20), 'upper': np.int64(85)}"
+USDJPY,ストキャスティクス,イベント除外,69.1,18.98,-6.49,94,1.75,1.25,"{'k_period': np.int64(12), 'd_period': np.int64(5), 'lower': np.int64(25), 'upper': np.int64(80)}"
+USDJPY,ストキャスティクス,全データ [WF検証],60.0,0.58,-6.11,62,1.91,0.0,WF 4分割平均
+USDJPY,ストキャスティクス,イベント除外 [WF検証],78.7,4.3,-4.18,76,1.85,0.0,WF 4分割平均
+USDJPY,ボリンジャーバンド逆張り,全データ,70.0,8.84,-9.28,20,2.21,0.54,"{'bb_period': np.int64(14), 'bb_std': np.float64(3.0)}"
+USDJPY,ボリンジャーバンド逆張り,イベント除外,86.7,26.22,-6.73,30,4.08,1.67,"{'bb_period': np.int64(18), 'bb_std': np.float64(3.0)}"
+USDJPY,ボリンジャーバンド逆張り,全データ [WF検証],55.7,-1.96,-7.18,78,0.74,0.0,WF 4分割平均
+USDJPY,ボリンジャーバンド逆張り,イベント除外 [WF検証],56.7,1.32,-7.29,55,2.16,0.0,WF 4分割平均
+USDJPY,BB+RSI複合,全データ,73.8,14.44,-9.9,42,2.07,0.87,"{'bb_period': np.int64(16), 'bb_std': np.float64(2.5), 'rsi_period': np.int64(18), 'rsi_lower': np.int64(35), 'rsi_upper': np.int64(65)}"
+USDJPY,BB+RSI複合,イベント除外,81.6,21.08,-4.82,38,4.74,1.58,"{'bb_period': np.int64(20), 'bb_std': np.float64(2.5), 'rsi_period': np.int64(16), 'rsi_lower': np.int64(30), 'rsi_upper': np.int64(60)}"
+USDJPY,BB+RSI複合,全データ [WF検証],67.5,1.71,-6.5,27,2.42,0.0,WF 4分割平均
+USDJPY,BB+RSI複合,イベント除外 [WF検証],69.7,1.13,-9.99,39,5.65,0.0,WF 4分割平均
+USDJPY,MACDクロス,全データ,38.3,22.51,-7.84,582,1.3,1.25,"{'fast': np.int64(8), 'slow': np.int64(22), 'signal': np.int64(7)}"
+USDJPY,MACDクロス,イベント除外,41.1,21.48,-6.33,484,1.34,1.38,"{'fast': np.int64(8), 'slow': np.int64(20), 'signal': np.int64(5)}"
+USDJPY,MACDクロス,全データ [WF検証],39.2,4.48,-4.89,404,1.3,0.0,WF 4分割平均
+USDJPY,MACDクロス,イベント除外 [WF検証],39.5,2.04,-8.98,316,1.23,0.0,WF 4分割平均
+EURUSD,RSI逆張り,全データ,100.0,12.19,-3.34,5,0.0,1.13,"{'rsi_period': np.int64(18), 'rsi_lower': np.int64(20), 'rsi_upper': np.int64(80)}"
+EURUSD,RSI逆張り,イベント除外,72.1,10.69,-6.84,43,1.95,0.93,"{'rsi_period': np.int64(14), 'rsi_lower': np.int64(35), 'rsi_upper': np.int64(75)}"
+EURUSD,RSI逆張り,全データ [WF検証],64.3,0.01,-6.76,66,1.08,0.0,WF 4分割平均
+EURUSD,RSI逆張り,イベント除外 [WF検証],71.3,0.57,-6.82,20,2.33,0.0,WF 4分割平均
+EURUSD,ストキャスティクス,全データ,71.4,20.15,-2.74,140,2.14,1.79,"{'k_period': np.int64(10), 'd_period': np.int64(4), 'lower': np.int64(20), 'upper': np.int64(80)}"
+EURUSD,ストキャスティクス,イベント除外,64.6,16.28,-4.95,144,1.74,1.56,"{'k_period': np.int64(14), 'd_period': np.int64(4), 'lower': np.int64(30), 'upper': np.int64(70)}"
+EURUSD,ストキャスティクス,全データ [WF検証],62.6,2.59,-5.42,108,1.43,0.0,WF 4分割平均
+EURUSD,ストキャスティクス,イベント除外 [WF検証],60.3,1.0,-4.11,89,1.23,0.0,WF 4分割平均
+EURUSD,ボリンジャーバンド逆張り,全データ,74.1,13.82,-7.21,27,2.69,1.02,"{'bb_period': np.int64(14), 'bb_std': np.float64(3.0)}"
+EURUSD,ボリンジャーバンド逆張り,イベント除外,69.4,10.94,-4.52,72,1.72,1.1,"{'bb_period': np.int64(16), 'bb_std': np.float64(2.5)}"
+EURUSD,ボリンジャーバンド逆張り,全データ [WF検証],66.3,1.59,-6.22,21,1.31,0.0,WF 4分割平均
+EURUSD,ボリンジャーバンド逆張り,イベント除外 [WF検証],59.9,1.49,-4.76,29,1.93,0.0,WF 4分割平均
+EURUSD,BB+RSI複合,全データ,76.7,18.4,-7.21,30,3.02,1.26,"{'bb_period': np.int64(14), 'bb_std': np.float64(2.5), 'rsi_period': np.int64(18), 'rsi_lower': np.int64(35), 'rsi_upper': np.int64(70)}"
+EURUSD,BB+RSI複合,イベント除外,74.5,14.35,-5.9,47,2.37,1.23,"{'bb_period': np.int64(14), 'bb_std': np.float64(2.5), 'rsi_period': np.int64(12), 'rsi_lower': np.int64(40), 'rsi_upper': np.int64(70)}"
+EURUSD,BB+RSI複合,全データ [WF検証],63.7,1.85,-5.3,44,1.52,0.0,WF 4分割平均
+EURUSD,BB+RSI複合,イベント除外 [WF検証],63.9,-0.2,-6.22,39,1.89,0.0,WF 4分割平均
+EURUSD,MACDクロス,全データ,34.3,9.58,-6.14,467,1.18,0.74,"{'fast': np.int64(12), 'slow': np.int64(20), 'signal': np.int64(11)}"
+EURUSD,MACDクロス,イベント除外,36.7,12.92,-5.41,403,1.28,1.08,"{'fast': np.int64(10), 'slow': np.int64(22), 'signal': np.int64(7)}"
+EURUSD,MACDクロス,全データ [WF検証],32.6,1.46,-5.51,418,1.11,0.0,WF 4分割平均
+EURUSD,MACDクロス,イベント除外 [WF検証],34.5,2.57,-3.63,311,1.17,0.0,WF 4分割平均
+GBPJPY,RSI逆張り,全データ,83.3,20.81,-12.08,12,2.92,0.96,"{'rsi_period': np.int64(16), 'rsi_lower': np.int64(30), 'rsi_upper': np.int64(80)}"
+GBPJPY,RSI逆張り,イベント除外,87.5,16.44,-11.64,8,4.16,0.86,"{'rsi_period': np.int64(20), 'rsi_lower': np.int64(35), 'rsi_upper': np.int64(80)}"
+GBPJPY,RSI逆張り,全データ [WF検証],83.3,1.38,-6.25,12,0.54,0.0,WF 4分割平均
+GBPJPY,RSI逆張り,イベント除外 [WF検証],61.4,1.7,-5.42,15,1.81,0.0,WF 4分割平均
+GBPJPY,ストキャスティクス,全データ,68.2,19.76,-9.25,154,1.59,1.12,"{'k_period': np.int64(12), 'd_period': np.int64(3), 'lower': np.int64(30), 'upper': np.int64(85)}"
+GBPJPY,ストキャスティクス,イベント除外,65.4,11.26,-9.11,153,1.35,0.76,"{'k_period': np.int64(10), 'd_period': np.int64(2), 'lower': np.int64(30), 'upper': np.int64(85)}"
+GBPJPY,ストキャスティクス,全データ [WF検証],61.9,3.32,-5.09,86,2.52,0.0,WF 4分割平均
+GBPJPY,ストキャスティクス,イベント除外 [WF検証],65.3,1.49,-4.06,109,3.71,0.0,WF 4分割平均
+GBPJPY,ボリンジャーバンド逆張り,全データ,75.0,15.19,-11.76,32,2.01,1.01,"{'bb_period': np.int64(28), 'bb_std': np.float64(3.0)}"
+GBPJPY,ボリンジャーバンド逆張り,イベント除外,78.8,16.93,-9.53,33,2.64,1.14,"{'bb_period': np.int64(20), 'bb_std': np.float64(3.0)}"
+GBPJPY,ボリンジャーバンド逆張り,全データ [WF検証],65.1,2.08,-7.15,50,1.25,0.0,WF 4分割平均
+GBPJPY,ボリンジャーバンド逆張り,イベント除外 [WF検証],70.4,3.02,-5.49,52,2.39,0.0,WF 4分割平均
+GBPJPY,BB+RSI複合,全データ,85.0,16.84,-6.71,20,4.06,1.31,"{'bb_period': np.int64(20), 'bb_std': np.float64(2.5), 'rsi_period': np.int64(14), 'rsi_lower': np.int64(25), 'rsi_upper': np.int64(70)}"
+GBPJPY,BB+RSI複合,イベント除外,88.0,20.17,-3.86,25,4.64,1.71,"{'bb_period': np.int64(14), 'bb_std': np.float64(2.0), 'rsi_period': np.int64(14), 'rsi_lower': np.int64(25), 'rsi_upper': np.int64(70)}"
+GBPJPY,BB+RSI複合,全データ [WF検証],79.4,5.34,-3.2,63,6.63,0.0,WF 4分割平均
+GBPJPY,BB+RSI複合,イベント除外 [WF検証],89.3,2.96,-3.26,23,2.27,0.0,WF 4分割平均
+GBPJPY,MACDクロス,全データ,38.3,-1.28,-6.79,540,0.99,-0.09,"{'fast': np.int64(10), 'slow': np.int64(20), 'signal': np.int64(11)}"
+GBPJPY,MACDクロス,イベント除外,43.2,2.51,-8.11,294,1.06,0.2,"{'fast': np.int64(14), 'slow': np.int64(28), 'signal': np.int64(11)}"
+GBPJPY,MACDクロス,全データ [WF検証],34.8,-1.34,-4.37,449,0.93,0.0,WF 4分割平均
+GBPJPY,MACDクロス,イベント除外 [WF検証],41.2,2.0,-6.8,303,1.39,0.0,WF 4分割平均
