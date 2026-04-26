@@ -21,18 +21,26 @@ PAIRS = {
         "twelve": "USD/JPY",         # Twelve Data用
         "pip_unit": 0.01,            # 1pip = 0.01
         "spread_pips": 0.3,
+        # TP/SL設定（リスクリワード比 1:2、最大保有24h）
+        "tp_pips": 30,
+        "sl_pips": 15,
     },
     "EURUSD": {
         "ticker": "EURUSD=X",
         "twelve": "EUR/USD",
         "pip_unit": 0.0001,
         "spread_pips": 0.2,
+        "tp_pips": 20,
+        "sl_pips": 10,
     },
     "GBPJPY": {
         "ticker": "GBPJPY=X",
         "twelve": "GBP/JPY",
         "pip_unit": 0.01,
         "spread_pips": 0.8,
+        # GBPJPYはボラティリティが高いため、TP/SLも広め
+        "tp_pips": 50,
+        "sl_pips": 25,
     },
 }
 
@@ -146,5 +154,20 @@ DATA_FETCH = {
 # シグナル評価設定
 # ============================================================
 EVALUATION = {
-    "horizons_hours": [1, 4, 24],  # 評価ホライズン（時間）
+    # 旧評価方式（N時間後の終値で評価）
+    "horizons_hours": [1, 4, 24],
+}
+
+# ============================================================
+# TP/SL評価設定
+# ============================================================
+TPSL_EVALUATION = {
+    # 最大保有時間（これを超えたら強制決済）
+    "max_holding_hours": 24,
+    # 1h足の本数（24時間 = 24本）。これより多いと評価できないシグナルもある
+    "max_holding_bars": 24,
+    # 同一bar内でTP/SLどちらにもヒットした場合の扱い
+    # "sl_first": 保守的（SL先と仮定、業界標準）
+    # "tp_first": 楽観的（TP先と仮定）
+    "tie_breaker": "sl_first",
 }

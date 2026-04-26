@@ -30,8 +30,11 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements-runtime.txt
 
-      - name: Run signal evaluation
+      - name: Run signal evaluation (N時間後の終値方式)
         run: python evaluate_signals.py
+
+      - name: Run signal evaluation (TP/SL方式)
+        run: python evaluate_signals_tpsl.py
 
       - name: Commit evaluation results
         run: |
@@ -40,10 +43,10 @@ jobs:
 
           git pull --rebase --autostash || true
 
-          git add logs/results.csv 2>/dev/null || true
+          git add logs/results.csv logs/results_tpsl.csv 2>/dev/null || true
           if git diff --staged --quiet; then
             echo "No new evaluations to commit"
           else
-            git commit -m "chore: update results.csv [skip ci]"
+            git commit -m "chore: update evaluation results [skip ci]"
             git push
           fi
