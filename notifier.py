@@ -44,6 +44,13 @@ def format_signal_message(signal):
     entry_low = signal.get("entry_low", entry_price)
     entry_high = signal.get("entry_high", entry_price)
 
+    # 推奨ロット（資金管理）
+    recommended_lot = signal.get("recommended_lot", 0)
+    if recommended_lot > 0:
+        lot_line = f"推奨ロット   : {recommended_lot:.2f} lot（口座×1%リスク前提）\n"
+    else:
+        lot_line = "推奨ロット   : 自己判断（口座未設定）\n"
+
     # 指値注文テンプレ（コードブロックで等幅表示）
     if tp_price is not None and sl_price is not None:
         order_template = (
@@ -51,8 +58,8 @@ def format_signal_message(signal):
             f"エントリー指値: {fmt.format(entry_low)} 〜 {fmt.format(entry_high)}\n"
             f"TP（利確）   : {fmt.format(tp_price)}  (+{tp_pips}pips)\n"
             f"SL（損切）   : {fmt.format(sl_price)}  (-{sl_pips}pips)\n"
+            f"{lot_line}"
             "有効期限     : 6時間\n"
-            "ロット      : 自己判断（小額推奨）\n"
             "```"
         )
         order_field = {
@@ -65,6 +72,19 @@ def format_signal_message(signal):
         order_field = None
 
     fields = []
+
+    # 警告（資金管理アラート）を最上部に表示
+    money_warnings = signal.get("warnings", [])
+    if money_warnings:
+        warning_lines = []
+        for w in money_warnings:
+            icon = ":octagonal_sign:" if w.get("level") == "critical" else ":warning:"
+            warning_lines.append(f"{icon} {w['message']}")
+        fields.append({
+            "name": ":bell: 資金管理アラート",
+            "value": "\n".join(warning_lines),
+            "inline": False,
+        })
 
     # 指値テンプレを最初に表示（一番見たい情報）
     if order_field:

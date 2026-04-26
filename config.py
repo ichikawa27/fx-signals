@@ -171,3 +171,27 @@ TPSL_EVALUATION = {
     # "tp_first": 楽観的（TP先と仮定）
     "tie_breaker": "sl_first",
 }
+
+# ============================================================
+# 資金管理設定（マネーマネジメント）
+# ============================================================
+MONEY_MANAGEMENT = {
+    # 口座情報（JPY建て前提）
+    "account_balance": 1000000,        # 円。実際の運用額に合わせて変更
+    "account_currency": "JPY",         # 現状 JPY のみサポート
+
+    # リスク管理
+    "risk_per_trade_pct": 1.0,         # 1トレードあたりのリスク（口座残高の%）
+
+    # クロス通貨ペア（EURUSD等）のロット計算で使う USDJPY 概算レート
+    # 精度優先なら yfinance で動的取得に変更可能
+    "usdjpy_estimate": 150.0,
+
+    # ロット粒度（業者によって 0.01 or 0.1）
+    "lot_step": 0.01,
+
+    # 警告閾値
+    "max_consecutive_losses": 3,        # 連敗警告
+    "max_drawdown_pips": 100,           # 累積ドローダウン警告（pips）
+    "max_daily_loss_pips": 50,          # 当日損失警告（pips）
+}

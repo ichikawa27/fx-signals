@@ -10,6 +10,7 @@ from ta.volatility import BollingerBands
 from datetime import datetime, timedelta
 from event_filter import detect_volatility_spikes, get_scheduled_events
 from config import PAIRS
+from money_management import calculate_recommended_lot, get_warnings
 
 # シグナル重複チェック用（GitHub Actions等のステートレス環境でも動作する）
 LOGS_DIR = os.path.join(os.path.dirname(__file__), "logs")
@@ -188,6 +189,10 @@ class SignalEngine:
             tp_price = current_close - tp_pips * pip_unit
             sl_price = current_close + sl_pips * pip_unit
 
+        # 資金管理：推奨ロット計算 + 警告生成
+        recommended_lot = calculate_recommended_lot(pair_name, sl_pips)
+        money_warnings = get_warnings()
+
         signal.update({
             "strategy": strategy_name,
             "pair": pair_name,
@@ -204,6 +209,9 @@ class SignalEngine:
             "entry_high": current_close + entry_offset,
             "pip_unit": pip_unit,
             "spread_pips": spread_pips,
+            # 資金管理
+            "recommended_lot": recommended_lot,
+            "warnings": money_warnings,
         })
 
         return signal
