@@ -7,8 +7,15 @@ import urllib.request
 from datetime import datetime
 
 
+def _price_format(pip_unit):
+    """pip_unit に応じた価格フォーマット文字列を返す"""
+    if pip_unit < 0.001:
+        return "{:.5f}"  # EURUSD等（0.0001刻み）
+    return "{:.3f}"      # JPY系（0.01刻み）
+
+
 def format_signal_message(signal):
-    """シグナルをDiscord用メッセージにフォーマット"""
+    """シグナルをDiscord用メッセージにフォーマット（指値注文テンプレ入り）"""
 
     # BUY/SELLで色とアイコンを分ける
     if signal["action"] == "BUY":
@@ -25,43 +32,84 @@ def format_signal_message(signal):
     bars = int(strength * 5)
     strength_bar = "█" * bars + "░" * (5 - bars)
 
+    # 価格表示桁数を pip_unit から決定
+    pip_unit = signal.get("pip_unit", 0.01)
+    fmt = _price_format(pip_unit)
+
+    entry_price = signal["price"]
+    tp_price = signal.get("tp_price")
+    sl_price = signal.get("sl_price")
+    tp_pips = signal.get("tp_pips", 0)
+    sl_pips = signal.get("sl_pips", 0)
+    entry_low = signal.get("entry_low", entry_price)
+    entry_high = signal.get("entry_high", entry_price)
+
+    # 指値注文テンプレ（コードブロックで等幅表示）
+    if tp_price is not None and sl_price is not None:
+        order_template = (
+            "```\n"
+            f"エントリー指値: {fmt.format(entry_low)} 〜 {fmt.format(entry_high)}\n"
+            f"TP（利確）   : {fmt.format(tp_price)}  (+{tp_pips}pips)\n"
+            f"SL（損切）   : {fmt.format(sl_price)}  (-{sl_pips}pips)\n"
+            "有効期限     : 6時間\n"
+            "ロット      : 自己判断（小額推奨）\n"
+            "```"
+        )
+        order_field = {
+            "name": ":dart: 指値注文テンプレ（OCO推奨）",
+            "value": order_template,
+            "inline": False,
+        }
+    else:
+        # 後方互換性：旧シグナル形式の場合
+        order_field = None
+
+    fields = []
+
+    # 指値テンプレを最初に表示（一番見たい情報）
+    if order_field:
+        fields.append(order_field)
+
+    # 基本情報
+    fields.extend([
+        {
+            "name": "シグナル価格",
+            "value": f"`{fmt.format(entry_price)}`",
+            "inline": True,
+        },
+        {
+            "name": "戦略",
+            "value": signal["strategy"],
+            "inline": True,
+        },
+        {
+            "name": "シグナル強度",
+            "value": f"`{strength_bar}` ({strength:.0%})",
+            "inline": True,
+        },
+        {
+            "name": "根拠",
+            "value": signal["reason"],
+            "inline": False,
+        },
+        {
+            "name": "BT勝率 / PF",
+            "value": f"{signal['backtest_winrate']:.1f}% / {signal['backtest_pf']:.2f}",
+            "inline": True,
+        },
+        {
+            "name": "データ時刻",
+            "value": str(signal.get("time", "N/A")),
+            "inline": True,
+        },
+    ])
+
     embed = {
         "title": f"{icon} {signal['pair']} {action_jp}",
         "color": color,
-        "fields": [
-            {
-                "name": "価格",
-                "value": f"`{signal['price']:.5f}`" if signal['price'] < 10 else f"`{signal['price']:.3f}`",
-                "inline": True,
-            },
-            {
-                "name": "戦略",
-                "value": signal["strategy"],
-                "inline": True,
-            },
-            {
-                "name": "シグナル強度",
-                "value": f"`{strength_bar}` ({strength:.0%})",
-                "inline": True,
-            },
-            {
-                "name": "根拠",
-                "value": signal["reason"],
-                "inline": False,
-            },
-            {
-                "name": "BT勝率 / PF",
-                "value": f"{signal['backtest_winrate']:.1f}% / {signal['backtest_pf']:.2f}",
-                "inline": True,
-            },
-            {
-                "name": "データ時刻",
-                "value": str(signal.get("time", "N/A")),
-                "inline": True,
-            },
-        ],
+        "fields": fields,
         "footer": {
-            "text": "FX Signal Bot | テクニカル分析に基づくシグナルです。投資判断は自己責任で行ってください。",
+            "text": "30分以内に指値設定推奨 | TP/SL自動 | 投資判断は自己責任",
         },
         "timestamp": datetime.utcnow().isoformat(),
     }

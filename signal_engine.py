@@ -9,6 +9,7 @@ from ta.momentum import RSIIndicator, StochasticOscillator
 from ta.volatility import BollingerBands
 from datetime import datetime, timedelta
 from event_filter import detect_volatility_spikes, get_scheduled_events
+from config import PAIRS
 
 # シグナル重複チェック用（GitHub Actions等のステートレス環境でも動作する）
 LOGS_DIR = os.path.join(os.path.dirname(__file__), "logs")
@@ -170,13 +171,39 @@ class SignalEngine:
         if _is_recent_duplicate(strategy_config["pair"], strategy_name, signal["action"]):
             return None
 
+        # TP/SL価格を計算（指値注文用）
+        pair_name = strategy_config["pair"]
+        pair_cfg = PAIRS.get(pair_name, {})
+        tp_pips = pair_cfg.get("tp_pips", 0)
+        sl_pips = pair_cfg.get("sl_pips", 0)
+        pip_unit = pair_cfg.get("pip_unit", 0.01)
+        spread_pips = pair_cfg.get("spread_pips", 0)
+        # 推奨指値範囲は ±2pips
+        entry_offset = 2 * pip_unit
+
+        if signal["action"] == "BUY":
+            tp_price = current_close + tp_pips * pip_unit
+            sl_price = current_close - sl_pips * pip_unit
+        else:  # SELL
+            tp_price = current_close - tp_pips * pip_unit
+            sl_price = current_close + sl_pips * pip_unit
+
         signal.update({
             "strategy": strategy_name,
-            "pair": strategy_config["pair"],
+            "pair": pair_name,
             "price": current_close,
             "time": df.index[-1],
             "backtest_winrate": strategy_config["backtest_winrate"],
             "backtest_pf": strategy_config["backtest_pf"],
+            # 指値注文テンプレ用
+            "tp_price": tp_price,
+            "sl_price": sl_price,
+            "tp_pips": tp_pips,
+            "sl_pips": sl_pips,
+            "entry_low": current_close - entry_offset,
+            "entry_high": current_close + entry_offset,
+            "pip_unit": pip_unit,
+            "spread_pips": spread_pips,
         })
 
         return signal
