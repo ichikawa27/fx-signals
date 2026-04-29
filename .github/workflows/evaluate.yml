@@ -16,7 +16,9 @@ permissions:
 jobs:
   evaluate:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    # pip install + 2スクリプト実行が混む時に5分を超えてキャンセルされる事象があったため
+    # 余裕を持たせて10分に延長（実際の処理は通常1〜3分）
+    timeout-minutes: 10
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
