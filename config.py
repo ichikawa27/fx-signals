@@ -115,18 +115,22 @@ STRATEGIES = {
         "backtest_pf": 1.85,
     },
     # EUR/USD ストキャスティクス (最適化ランキング9位, 取引数140回で安定)
-    "EURUSD_STOCH": {
-        "pair": "EURUSD",
-        "type": "stochastic",
-        "params": {
-            "k_period": 10,
-            "d_period": 4,
-            "lower": 20,
-            "upper": 80,
-        },
-        "backtest_winrate": 71.4,
-        "backtest_pf": 2.14,
-    },
+    # 【無効化中】2026-04-30 時点の実データ：N=6 勝率17% 累積-32.4pips
+    # 同パラメータの USDJPY/GBPJPY_STOCH は勝率50% で機能しているため、
+    # EURUSD 市場の現在の特性（強いトレンド相場？）とミスマッチと判断。
+    # データ蓄積 or 相場環境変化で再評価する場合はコメント解除。
+    # "EURUSD_STOCH": {
+    #     "pair": "EURUSD",
+    #     "type": "stochastic",
+    #     "params": {
+    #         "k_period": 10,
+    #         "d_period": 4,
+    #         "lower": 20,
+    #         "upper": 80,
+    #     },
+    #     "backtest_winrate": 71.4,
+    #     "backtest_pf": 2.14,
+    # },
 }
 
 # ============================================================
