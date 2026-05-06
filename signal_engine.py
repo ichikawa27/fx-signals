@@ -7,6 +7,7 @@ import pandas as pd
 import numpy as np
 from ta.momentum import RSIIndicator, StochasticOscillator
 from ta.volatility import BollingerBands
+from ta.trend import SMAIndicator
 from datetime import datetime, timedelta
 from event_filter import detect_volatility_spikes, get_scheduled_events
 from config import PAIRS
@@ -81,6 +82,20 @@ class SignalEngine:
             )
             indicators["stoch_k"] = stoch.stoch()
             indicators["stoch_d"] = stoch.stoch_signal()
+
+        # SMA Cross（移動平均クロス、トレンドフォロー）
+        if stype == "sma_cross":
+            sma_fast = SMAIndicator(close, window=params["fast_period"])
+            sma_slow = SMAIndicator(close, window=params["slow_period"])
+            indicators["sma_fast"] = sma_fast.sma_indicator()
+            indicators["sma_slow"] = sma_slow.sma_indicator()
+
+        # Donchian Channel（過去N期間の高安値ブレイクアウト）
+        if stype == "donchian":
+            period = params["period"]
+            # 1本前までのN期間の高安値（現足のbreakout判定用）
+            indicators["donchian_high"] = high.rolling(period).max().shift(1)
+            indicators["donchian_low"] = low.rolling(period).min().shift(1)
 
         return indicators
 
@@ -163,6 +178,58 @@ class SignalEngine:
                     "action": "SELL",
                     "reason": f"ストキャス(%K={k_now:.1f}, %D={d_now:.1f}) 買われすぎ圏でDC",
                     "strength": min((k_now - params["upper"]) / 20, 1.0),
+                }
+
+        # SMA Cross（移動平均クロス、トレンドフォロー）
+        elif stype == "sma_cross":
+            sma_fast_now = indicators["sma_fast"].iloc[-1]
+            sma_slow_now = indicators["sma_slow"].iloc[-1]
+            sma_fast_prev = indicators["sma_fast"].iloc[-2]
+            sma_slow_prev = indicators["sma_slow"].iloc[-2]
+            if pd.isna(sma_fast_now) or pd.isna(sma_slow_now):
+                return None
+
+            # ゴールデンクロス（短期が長期を上抜け）→ 順張り買い
+            if sma_fast_now > sma_slow_now and sma_fast_prev <= sma_slow_prev:
+                gap_pct = (sma_fast_now - sma_slow_now) / sma_slow_now * 100
+                signal = {
+                    "action": "BUY",
+                    "reason": f"SMAゴールデンクロス（短期{sma_fast_now:.3f} > 長期{sma_slow_now:.3f}, 乖離{gap_pct:.2f}%）",
+                    "strength": min(gap_pct * 5, 1.0),
+                }
+            # デッドクロス（短期が長期を下抜け）→ 順張り売り
+            elif sma_fast_now < sma_slow_now and sma_fast_prev >= sma_slow_prev:
+                gap_pct = (sma_slow_now - sma_fast_now) / sma_slow_now * 100
+                signal = {
+                    "action": "SELL",
+                    "reason": f"SMAデッドクロス（短期{sma_fast_now:.3f} < 長期{sma_slow_now:.3f}, 乖離{gap_pct:.2f}%）",
+                    "strength": min(gap_pct * 5, 1.0),
+                }
+
+        # Donchian Breakout（過去N期間の高安値ブレイクアウト）
+        elif stype == "donchian":
+            high_now = float(df["High"].iloc[-1])
+            low_now = float(df["Low"].iloc[-1])
+            donchian_high = indicators["donchian_high"].iloc[-1]
+            donchian_low = indicators["donchian_low"].iloc[-1]
+            if pd.isna(donchian_high) or pd.isna(donchian_low):
+                return None
+
+            # 高値ブレイク（上抜け）→ 順張り買い
+            if high_now > donchian_high:
+                breakout_pct = (high_now - donchian_high) / donchian_high * 100
+                signal = {
+                    "action": "BUY",
+                    "reason": f"Donchian高値ブレイク（{donchian_high:.3f}を上抜け、現価{current_close:.3f}）",
+                    "strength": min(breakout_pct * 10, 1.0),
+                }
+            # 安値ブレイク（下抜け）→ 順張り売り
+            elif low_now < donchian_low:
+                breakout_pct = (donchian_low - low_now) / donchian_low * 100
+                signal = {
+                    "action": "SELL",
+                    "reason": f"Donchian安値ブレイク（{donchian_low:.3f}を下抜け、現価{current_close:.3f}）",
+                    "strength": min(breakout_pct * 10, 1.0),
                 }
 
         if signal is None:

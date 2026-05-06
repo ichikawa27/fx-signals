@@ -226,6 +226,70 @@ class SMA_Triple_Strategy(Strategy):
             self.position.close()
 
 
+class SMA_Cross_Both_Strategy(Strategy):
+    """移動平均クロス（双方向、Phase 7用）
+
+    既存 SMA_Cross_Strategy は買いのみだが、これは売りも対応。
+    signal_engine.py の sma_cross と同じロジック。
+    """
+    fast_period = 20
+    slow_period = 50
+
+    def init(self):
+        close = pd.Series(self.data.Close, index=range(len(self.data.Close)))
+        self.sma_fast = self.I(lambda: SMAIndicator(close, window=self.fast_period).sma_indicator().values)
+        self.sma_slow = self.I(lambda: SMAIndicator(close, window=self.slow_period).sma_indicator().values)
+
+    def next(self):
+        # ゴールデンクロス → 買い（既存ポジションがあればクローズしてから）
+        if self.sma_fast[-1] > self.sma_slow[-1] and self.sma_fast[-2] <= self.sma_slow[-2]:
+            if self.position:
+                self.position.close()
+            self.buy()
+        # デッドクロス → 売り
+        elif self.sma_fast[-1] < self.sma_slow[-1] and self.sma_fast[-2] >= self.sma_slow[-2]:
+            if self.position:
+                self.position.close()
+            self.sell()
+
+
+class Donchian_Strategy(Strategy):
+    """Donchian Channel ブレイクアウト（双方向、Phase 7用）
+
+    過去N期間の高安値ブレイクで順張り。タートル・トレーダーの古典手法。
+    signal_engine.py の donchian と同じロジック。
+    """
+    period = 20
+
+    def init(self):
+        high = pd.Series(self.data.High, index=range(len(self.data.High)))
+        low = pd.Series(self.data.Low, index=range(len(self.data.Low)))
+        # 1bar前までの過去N期間の高安値
+        self.donchian_high = self.I(
+            lambda: high.rolling(self.period).max().shift(1).values
+        )
+        self.donchian_low = self.I(
+            lambda: low.rolling(self.period).min().shift(1).values
+        )
+
+    def next(self):
+        if pd.isna(self.donchian_high[-1]) or pd.isna(self.donchian_low[-1]):
+            return
+        high_now = self.data.High[-1]
+        low_now = self.data.Low[-1]
+
+        # 高値ブレイク → 買い
+        if high_now > self.donchian_high[-1]:
+            if self.position:
+                self.position.close()
+            self.buy()
+        # 安値ブレイク → 売り
+        elif low_now < self.donchian_low[-1]:
+            if self.position:
+                self.position.close()
+            self.sell()
+
+
 # ============================================================
 # バックテスト実行
 # ============================================================

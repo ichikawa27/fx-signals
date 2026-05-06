@@ -131,6 +131,61 @@ STRATEGIES = {
     #     "backtest_winrate": 71.4,
     #     "backtest_pf": 2.14,
     # },
+
+    # =========================================================
+    # 【Phase 7】順張り戦略（バックテスト未実施、デフォルトパラメータ）
+    # 既存の逆張り戦略では強トレンド相場で負ける問題への対処として追加。
+    # データ30件以上溜まったら optimize.py で最適化推奨。
+    # backtest_winrate / backtest_pf は暫定値（50% / 1.0）。
+    # =========================================================
+
+    # USD/JPY 移動平均クロス（順張り）
+    # SMA20とSMA50のクロスでトレンド転換を捉える
+    "USDJPY_SMA_CROSS": {
+        "pair": "USDJPY",
+        "type": "sma_cross",
+        "params": {
+            "fast_period": 20,
+            "slow_period": 50,
+        },
+        "backtest_winrate": 50.0,  # 暫定（要バックテスト）
+        "backtest_pf": 1.0,
+    },
+
+    # GBP/JPY 移動平均クロス（順張り）
+    "GBPJPY_SMA_CROSS": {
+        "pair": "GBPJPY",
+        "type": "sma_cross",
+        "params": {
+            "fast_period": 20,
+            "slow_period": 50,
+        },
+        "backtest_winrate": 50.0,
+        "backtest_pf": 1.0,
+    },
+
+    # USD/JPY Donchian Breakout（過去20期間の高安値ブレイク）
+    # タートル・トレーダーの古典的手法。トレンド初動を捉える。
+    "USDJPY_DONCHIAN": {
+        "pair": "USDJPY",
+        "type": "donchian",
+        "params": {
+            "period": 20,
+        },
+        "backtest_winrate": 50.0,
+        "backtest_pf": 1.0,
+    },
+
+    # GBP/JPY Donchian Breakout
+    "GBPJPY_DONCHIAN": {
+        "pair": "GBPJPY",
+        "type": "donchian",
+        "params": {
+            "period": 20,
+        },
+        "backtest_winrate": 50.0,
+        "backtest_pf": 1.0,
+    },
 }
 
 # ============================================================
