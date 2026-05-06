@@ -133,59 +133,48 @@ STRATEGIES = {
     # },
 
     # =========================================================
-    # 【Phase 7】順張り戦略（バックテスト未実施、デフォルトパラメータ）
-    # 既存の逆張り戦略では強トレンド相場で負ける問題への対処として追加。
-    # データ30件以上溜まったら optimize.py で最適化推奨。
-    # backtest_winrate / backtest_pf は暫定値（50% / 1.0）。
+    # 【Phase 7】順張り戦略 - 全て無効化（2026-05-06）
+    #
+    # バックテスト結果（optimize_phase7.py、ウォークフォワード検証）：
+    #   全8パターンで採用基準（実用PF >= 1.5 かつ 実用勝率 >= 40%）クリアせず
+    #
+    #   - SMA Cross: 勝率31-37%、実用PF 0.38-0.55 → 採用NG
+    #   - Donchian : 勝率60-65%だがPF 0.82-0.93 → 過剰取引で赤字
+    #
+    # 「強トレンド相場では順張り！」という仮説はバックテストで否定された。
+    # 現在の市場環境では既存の逆張り戦略の方が有利と判断、全戦略を無効化。
+    # 将来の市場環境変化や、ATR ベースのTP/SL等の改善後に再検証する場合は
+    # 以下のコメントを外す。
     # =========================================================
 
-    # USD/JPY 移動平均クロス（順張り）
-    # SMA20とSMA50のクロスでトレンド転換を捉える
-    "USDJPY_SMA_CROSS": {
-        "pair": "USDJPY",
-        "type": "sma_cross",
-        "params": {
-            "fast_period": 20,
-            "slow_period": 50,
-        },
-        "backtest_winrate": 50.0,  # 暫定（要バックテスト）
-        "backtest_pf": 1.0,
-    },
-
-    # GBP/JPY 移動平均クロス（順張り）
-    "GBPJPY_SMA_CROSS": {
-        "pair": "GBPJPY",
-        "type": "sma_cross",
-        "params": {
-            "fast_period": 20,
-            "slow_period": 50,
-        },
-        "backtest_winrate": 50.0,
-        "backtest_pf": 1.0,
-    },
-
-    # USD/JPY Donchian Breakout（過去20期間の高安値ブレイク）
-    # タートル・トレーダーの古典的手法。トレンド初動を捉える。
-    "USDJPY_DONCHIAN": {
-        "pair": "USDJPY",
-        "type": "donchian",
-        "params": {
-            "period": 20,
-        },
-        "backtest_winrate": 50.0,
-        "backtest_pf": 1.0,
-    },
-
-    # GBP/JPY Donchian Breakout
-    "GBPJPY_DONCHIAN": {
-        "pair": "GBPJPY",
-        "type": "donchian",
-        "params": {
-            "period": 20,
-        },
-        "backtest_winrate": 50.0,
-        "backtest_pf": 1.0,
-    },
+    # "USDJPY_SMA_CROSS": {
+    #     "pair": "USDJPY",
+    #     "type": "sma_cross",
+    #     "params": {"fast_period": 20, "slow_period": 50},
+    #     "backtest_winrate": 50.0,
+    #     "backtest_pf": 1.0,
+    # },
+    # "GBPJPY_SMA_CROSS": {
+    #     "pair": "GBPJPY",
+    #     "type": "sma_cross",
+    #     "params": {"fast_period": 20, "slow_period": 50},
+    #     "backtest_winrate": 50.0,
+    #     "backtest_pf": 1.0,
+    # },
+    # "USDJPY_DONCHIAN": {
+    #     "pair": "USDJPY",
+    #     "type": "donchian",
+    #     "params": {"period": 20},
+    #     "backtest_winrate": 50.0,
+    #     "backtest_pf": 1.0,
+    # },
+    # "GBPJPY_DONCHIAN": {
+    #     "pair": "GBPJPY",
+    #     "type": "donchian",
+    #     "params": {"period": 20},
+    #     "backtest_winrate": 50.0,
+    #     "backtest_pf": 1.0,
+    # },
 }
 
 # ============================================================

@@ -1,0 +1,17 @@
+﻿通貨ペア,戦略,条件,勝率(%),リターン(%),最大DD(%),トレード数,PF,シャープ比,最適パラメータ
+USDJPY,SMA Cross双方向,全データ,37.7,10.68,-9.15,146,1.24,0.46,"{'fast_period': np.int64(20), 'slow_period': np.int64(100)}"
+USDJPY,SMA Cross双方向,イベント除外,37.2,4.71,-8.89,218,1.09,0.23,"{'fast_period': np.int64(10), 'slow_period': np.int64(50)}"
+USDJPY,SMA Cross双方向,全データ [WF検証],35.9,2.86,-8.4,169,1.1,0.0,WF 4分割平均
+USDJPY,SMA Cross双方向,イベント除外 [WF検証],31.7,-2.37,-8.89,176,0.79,0.0,WF 4分割平均
+USDJPY,Donchian Breakout,全データ,58.8,-3.85,-18.3,4123,0.99,-0.18,{'period': np.int64(10)}
+USDJPY,Donchian Breakout,イベント除外,59.7,2.94,-15.41,2950,1.02,0.16,{'period': np.int64(10)}
+USDJPY,Donchian Breakout,全データ [WF検証],60.6,-5.58,-16.07,2499,0.93,0.0,WF 4分割平均
+USDJPY,Donchian Breakout,イベント除外 [WF検証],60.8,-4.93,-15.4,1744,0.91,0.0,WF 4分割平均
+GBPJPY,SMA Cross双方向,全データ,32.9,7.06,-16.33,143,1.12,0.34,"{'fast_period': np.int64(30), 'slow_period': np.int64(100)}"
+GBPJPY,SMA Cross双方向,イベント除外,40.5,11.9,-8.39,195,1.21,0.65,"{'fast_period': np.int64(30), 'slow_period': np.int64(50)}"
+GBPJPY,SMA Cross双方向,全データ [WF検証],31.0,-0.87,-11.45,176,0.92,0.0,WF 4分割平均
+GBPJPY,SMA Cross双方向,イベント除外 [WF検証],35.5,-1.2,-7.4,165,0.76,0.0,WF 4分割平均
+GBPJPY,Donchian Breakout,全データ,65.8,-16.61,-25.4,1782,0.9,-0.97,{'period': np.int64(50)}
+GBPJPY,Donchian Breakout,イベント除外,64.7,-10.1,-21.39,1350,0.93,-0.63,{'period': np.int64(50)}
+GBPJPY,Donchian Breakout,全データ [WF検証],64.4,-7.19,-10.79,1308,0.82,0.0,WF 4分割平均
+GBPJPY,Donchian Breakout,イベント除外 [WF検証],63.2,-4.92,-11.8,985,0.85,0.0,WF 4分割平均
